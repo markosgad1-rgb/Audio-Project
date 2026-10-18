@@ -1,0 +1,8 @@
+{
+  "name": "Project Codes Directory - دليل أكواد المشاريع",
+  "description": "تطبيق ويب خفيف لمشرفي المواقع للوصول السريع لأرقام المشاريع والبحث الفوري والنسخ بلمسة واحدة لتسجيل البصمة",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

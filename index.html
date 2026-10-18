@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Project Codes Directory - دليل أكواد المشاريع</title>
+  <meta name="description" content="تطبيق ويب خفيف لمشرفي المواقع للوصول السريع لأرقام المشاريع والبحث الفوري والنسخ بلمسة واحدة لتسجيل البصمة" />
+  <meta property="og:title" content="Project Codes Directory - دليل أكواد المشاريع" />
+  <meta property="og:description" content="تطبيق ويب خفيف لمشرفي المواقع للوصول السريع لأرقام المشاريع والبحث الفوري والنسخ بلمسة واحدة لتسجيل البصمة" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Google Fonts: Cairo for crisp Arabic readability & Plus Jakarta Sans for Latin codes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Cairo', 'sans-serif'],
+            display: ['Cairo', 'sans-serif'],
+            mono: ['"JetBrains Mono"', '"Plus Jakarta Sans"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            },
+            site: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .code-font {
+      font-family: 'JetBrains Mono', 'Plus Jakarta Sans', monospace;
+      font-feature-settings: "tnum" 1;
+    }
+    /* Smooth toast slide up */
+    @keyframes slideUp {
+      from { transform: translateY(100%) scale(0.95); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .animate-toast {
+      animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 antialiased selection:bg-emerald-100 selection:text-emerald-900 pb-16">
+
+  <!-- ================= TOP APP BAR ================= -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      
+      <!-- Brand & Site Context -->
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center font-bold text-lg shadow-sm shrink-0">
+          <!-- Construction Hardhat / ID Icon -->
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+        </div>
+        <div class="truncate">
+          <h1 class="text-base font-extrabold text-slate-900 leading-tight truncate">
+            أكواد المشاريع
+          </h1>
+          <p class="text-xs font-medium text-slate-500 leading-tight truncate">
+            تسجيل البصمة لمشرف الموقع
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <!-- Backup / Settings Button -->
+        <button id="backupModalBtn" title="النسخ الاحتياطي ونقل البيانات" class="min-h-[42px] px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 active:scale-95 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-all">
+          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+          </svg>
+          <span class="hidden sm:inline">نسخ احتياطي</span>
+        </button>
+
+        <!-- New Project Button -->
+        <button id="openAddModalBtn" class="min-h-[42px] px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <span>مشروع جديد</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="max-w-4xl mx-auto px-4 w-full flex-1 pt-4 pb-12">
+
+    <!-- SEARCH & FILTER ZONE (ERGONOMIC & INSTANT) -->
+    <section class="space-y-3 mb-5">
+      
+      <!-- Big Search Input -->
+      <div class="relative">
+        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="ابحث برقم المشروع (A1712..)، الاسم بالعربي أو الإنجليزي..."
+          class="w-full min-h-[52px] pr-11 pl-11 py-3 text-base font-medium bg-white border border-slate-300 rounded-2xl shadow-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <!-- Clear search button -->
+        <button
+          id="clearSearchBtn"
+          class="hidden absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+          title="مسح البحث"
+        >
+          <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold">✕</div>
+        </button>
+      </div>
+
+      <!-- Filters & Counter Bar -->
+      <div class="flex items-center justify-between text-xs text-slate-600 gap-2 flex-wrap">
+        
+        <!-- Filter Tabs -->
+        <div class="flex items-center gap-1 bg-slate-200/70 p-1 rounded-xl">
+          <button id="filterAll" class="filter-tab px-3 py-1.5 rounded-lg font-semibold bg-white text-slate-900 shadow-xs transition-colors">
+            الكل
+          </button>
+          <button id="filterPinned" class="filter-tab px-3 py-1.5 rounded-lg font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1">
+            <span>المثبتة</span>
+            <span class="text-amber-500">★</span>
+          </button>
+        </div>
+
+        <!-- Counter Indicator -->
+        <div id="resultsCount" class="font-medium text-slate-500 tabular-nums">
+          عرض <span id="displayedCount" class="font-bold text-slate-900">0</span> من أصل <span id="totalCount" class="font-bold text-slate-900">0</span> مشروع
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- PROJECTS LIST / GRID -->
+    <section>
+      <div id="projectsGrid" class="space-y-3">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+
+      <!-- Empty State: No results -->
+      <div id="emptyState" class="hidden text-center py-12 px-4 bg-white rounded-3xl border border-dashed border-slate-300 shadow-xs">
+        <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-base font-bold text-slate-800 mb-1">لم يتم العثور على أي نتائج</h3>
+        <p id="emptyStateDesc" class="text-xs text-slate-500 max-w-sm mx-auto mb-4">
+          تأكد من كتابة الكود أو الاسم بشكل صحيح، أو أضف هذا المشروع الجديد الآن.
+        </p>
+        <button id="quickAddFromSearchBtn" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <span>إضافة هذا المشروع الآن</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= MODAL: ADD / EDIT PROJECT ================= -->
+  <div id="projectModal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-200">
+    <div class="w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div>
+          <h2 id="modalTitle" class="text-base font-bold text-slate-900">إضافة مشروع جديد</h2>
+          <p class="text-xs text-slate-500">سجل بيانات كود البصمة واسم الموقع</p>
+        </div>
+        <button id="closeModalBtn" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Form Body -->
+      <form id="projectForm" class="p-5 space-y-4 overflow-y-auto">
+        <input type="hidden" id="projectId" />
+
+        <!-- Project Code -->
+        <div>
+          <label for="projectCode" class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+            <span>رقم / كود المشروع (Project Code) <span class="text-rose-500">*</span></span>
+            <span class="text-[11px] font-normal text-slate-400">مثال: A1712-2</span>
+          </label>
+          <div class="relative">
+            <input
+              id="projectCode"
+              type="text"
+              required
+              placeholder="A1712-2"
+              dir="ltr"
+              class="w-full min-h-[46px] px-3.5 py-2.5 text-base font-mono font-bold uppercase tracking-wider bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          </div>
+          <p class="text-[11px] text-slate-500 mt-1">هذا هو الرقم الذي يُنسخ لتسجيل البصمة في تطبيق الموبايل.</p>
+        </div>
+
+        <!-- Arabic Name -->
+        <div>
+          <label for="projectNameAr" class="block text-xs font-bold text-slate-700 mb-1.5">
+            اسم المشروع بالعربي <span class="text-rose-500">*</span>
+          </label>
+          <input
+            id="projectNameAr"
+            type="text"
+            required
+            placeholder="مثال: أبراج العلمين - البرج السكني"
+            class="w-full min-h-[46px] px-3.5 py-2.5 text-sm font-semibold bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+          />
+        </div>
+
+        <!-- English Name -->
+        <div>
+          <label for="projectNameEn" class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+            <span>اسم المشروع بالإنجليزي</span>
+            <span class="text-[11px] font-normal text-slate-400">(اختياري)</span>
+          </label>
+          <input
+            id="projectNameEn"
+            type="text"
+            dir="ltr"
+            placeholder="e.g. Alamein Towers"
+            class="w-full min-h-[46px] px-3.5 py-2.5 text-sm font-medium bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+          />
+        </div>
+
+        <!-- Extra Notes -->
+        <div>
+          <label for="projectNotes" class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+            <span>ملاحظات إضافية</span>
+            <span class="text-[11px] font-normal text-slate-400">(اختياري)</span>
+          </label>
+          <input
+            id="projectNotes"
+            type="text"
+            placeholder="مثال: بوابة رقم 2، الوردية الصباحية، قطاع ج..."
+            class="w-full min-h-[46px] px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+          />
+        </div>
+
+        <!-- Pin to top toggle -->
+        <div class="flex items-center gap-2.5 pt-1">
+          <input
+            id="projectPinned"
+            type="checkbox"
+            class="w-5 h-5 rounded-md border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+          />
+          <label for="projectPinned" class="text-xs font-bold text-slate-700 cursor-pointer select-none">
+            تثبيت في أعلى القائمة (للمشاريع الأكثر تكراراً) ★
+          </label>
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="pt-3 flex items-center gap-2">
+          <button
+            type="button"
+            id="cancelModalBtn"
+            class="min-h-[46px] flex-1 py-2.5 px-4 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 active:scale-95 transition-all"
+          >
+            إلغاء
+          </button>
+          <button
+            type="submit"
+            class="min-h-[46px] flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm active:scale-95 transition-all"
+          >
+            حفظ المشروع
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL: BACKUP & DATA MANAGEMENT ================= -->
+  <div id="backupModal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-200">
+    <div class="w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
+      
+      <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-slate-900">النسخ الاحتياطي وإدارة البيانات</h2>
+          <p class="text-xs text-slate-500">حفظ أو استيراد مشاريعك لنقلها لجهاز آخر</p>
+        </div>
+        <button id="closeBackupModalBtn" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4">
+        
+        <!-- Export Box -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <h3 class="text-xs font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            تصدير البيانات (Export JSON)
+          </h3>
+          <p class="text-[11px] text-slate-500 mb-3">
+            قم بتحميل ملف نسخة احتياطية لكافة المشاريع المسجلة لحفظها أو مشاركتها مع زميل آخر.
+          </p>
+          <button id="exportBtn" class="w-full min-h-[44px] px-3 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 text-xs font-bold flex items-center justify-center gap-2 shadow-2xs transition-all active:scale-95">
+            <span>تنزيل ملف النسخة الاحتياطية</span>
+          </button>
+        </div>
+
+        <!-- Import Box -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <h3 class="text-xs font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12"></path>
+            </svg>
+            استيراد البيانات (Import JSON)
+          </h3>
+          <p class="text-[11px] text-slate-500 mb-3">
+            اختر ملف JSON محفوظ مسبقاً لإضافة المشاريع إلى هذا الجهاز فوراً.
+          </p>
+          <input type="file" id="importFileInput" accept=".json,application/json" class="hidden" />
+          <button id="importBtn" class="w-full min-h-[44px] px-3 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 text-xs font-bold flex items-center justify-center gap-2 shadow-2xs transition-all active:scale-95">
+            <span>اختيار ملف واستيراده</span>
+          </button>
+        </div>
+
+        <!-- Reset to Defaults Box -->
+        <div class="pt-2">
+          <button id="resetDefaultsBtn" class="w-full py-2.5 text-xs text-rose-600 hover:text-rose-700 font-semibold hover:bg-rose-50 rounded-xl transition-colors">
+            استعادة المشاريع التجريبية الافتراضية
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toastContainer" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none w-full max-w-sm px-4">
+    <!-- Toasts dynamically appended here -->
+  </div>
+
+  <!-- ================= JAVASCRIPT APPLICATION CODE ================= -->
+  <script>
+    /**
+     * Project Codes Directory - Attendance Quick Copy App
+     * Site Supervisor Companion Application
+     */
+
+    // Storage Key
+    const STORAGE_KEY = 'site_supervisor_projects_v2';
+
+    // Default Seed Projects (3+ Realistic construction projects)
+    const DEFAULT_PROJECTS = [
+      {
+        id: 'proj_default_1',
+        code: 'A1712-2',
+        nameAr: 'أبراج العلمين - البرج السكني',
+        nameEn: 'Alamein Towers - Residential',
+        notes: 'بوابة رقم 2 - قطاع ج (الوردية الصباحية)',
+        isPinned: true,
+        createdAt: 1713000000000
+      },
+      {
+        id: 'proj_default_2',
+        code: 'B204-1',
+        nameAr: 'العاصمة الإدارية - النهر الأخضر',
+        nameEn: 'Green River Project - R3',
+        notes: 'مبنى الإدارة الرئيسي - قطاع التشطيبات',
+        isPinned: true,
+        createdAt: 1713000100000
+      },
+      {
+        id: 'proj_default_3',
+        code: 'C9901-A',
+        nameAr: 'مترو الأنفاق - الخط الرابع',
+        nameEn: 'Cairo Metro Line 4',
+        notes: 'محطة الرماية والمتحف المصري الكبير',
+        isPinned: false,
+        createdAt: 1713000200000
+      },
+      {
+        id: 'proj_default_4',
+        code: 'D508-X',
+        nameAr: 'مجمع مصانع العاشر من رمضان',
+        nameEn: '10th of Ramadan Industrial Park',
+        notes: 'بصمة العمال والمقاولين - البوابة الشمالية',
+        isPinned: false,
+        createdAt: 1713000300000
+      }
+    ];
+
+    // State
+    let projects = [];
+    let activeFilter = 'all'; // 'all' | 'pinned'
+    let copiedProjectCode = null;
+    let copiedTimer = null;
+
+    // Smart Arabic Text Normalization
+    function normalizeArabic(text) {
+      if (!text) return '';
+      return text
+        .toString()
+        .toLowerCase()
+        // Strip Arabic Tashkeel (harakat & tanween)
+        .replace(/[\u064B-\u065F\u0670]/g, '')
+        // Strip Tatweel / Kashida
+        .replace(/ـ/g, '')
+        // Unify Alef variations: أ, إ, آ, ٱ -> ا
+        .replace(/[أإآٱ]/g, 'ا')
+        // Unify Taa Marbuta & Haa: ة -> ه
+        .replace(/ة/g, 'ه')
+        // Unify Yaa and Alef Maqsura: ى -> ي
+        .replace(/ى/g, 'ي')
+        // Unify punctuation and multi-whitespace
+        .replace(/[\s\-_/\\,.]+/g, ' ')
+        .trim();
+    }
+
+    // Load Data from LocalStorage
+    function loadProjects() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            projects = parsed;
+            return;
+          }
+        }
+      } catch (e) {
+        console.error('Failed to parse localStorage data:', e);
+      }
+      // If nothing saved, initialize with defaults
+      projects = [...DEFAULT_PROJECTS];
+      saveProjects();
+    }
+
+    // Save Data to LocalStorage
+    function saveProjects() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+      } catch (e) {
+        console.error('Failed to save to localStorage:', e);
+        showToast('تعذر الحفظ في ذاكرة المتصفح', 'error');
+      }
+    }
+
+    // Highlight query text inside string
+    function highlightMatch(text, query) {
+      if (!text || !query) return escapeHtml(text || '');
+      const rawText = text.toString();
+      const normText = normalizeArabic(rawText);
+      const normQuery = normalizeArabic(query);
+      
+      const idx = normText.indexOf(normQuery);
+      if (idx === -1) {
+        // Check case-insensitive raw substring match
+        const rawIdx = rawText.toLowerCase().indexOf(query.toLowerCase());
+        if (rawIdx === -1) return escapeHtml(rawText);
+        const start = rawText.slice(0, rawIdx);
+        const match = rawText.slice(rawIdx, rawIdx + query.length);
+        const end = rawText.slice(rawIdx + query.length);
+        return `${escapeHtml(start)}<mark class="bg-amber-200 text-slate-900 rounded-xs px-0.5">${escapeHtml(match)}</mark>${escapeHtml(end)}`;
+      }
+
+      // Return with highlight
+      const start = rawText.slice(0, idx);
+      const match = rawText.slice(idx, idx + query.length);
+      const end = rawText.slice(idx + query.length);
+      return `${escapeHtml(start)}<mark class="bg-amber-200 text-slate-900 rounded-xs px-0.5">${escapeHtml(match)}</mark>${escapeHtml(end)}`;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Filter projects based on search query and active filter
+    function getFilteredProjects() {
+      const searchInput = document.getElementById('searchInput');
+      const query = searchInput ? searchInput.value.trim() : '';
+      const normQuery = normalizeArabic(query);
+      const cleanQuery = query.toLowerCase().replace(/[\s\-_]+/g, '');
+
+      return projects.filter(p => {
+        // Tab filter
+        if (activeFilter === 'pinned' && !p.isPinned) return false;
+
+        if (!query) return true;
+
+        // Code match (e.g. A1712-2, a17122, 1712)
+        const cleanCode = (p.code || '').toLowerCase().replace(/[\s\-_]+/g, '');
+        if (cleanCode.includes(cleanQuery)) return true;
+
+        // Arabic name match
+        const normNameAr = normalizeArabic(p.nameAr || '');
+        if (normNameAr.includes(normQuery)) return true;
+
+        // English name match
+        const nameEn = (p.nameEn || '').toLowerCase();
+        if (nameEn.includes(query.toLowerCase())) return true;
+
+        // Notes match
+        const normNotes = normalizeArabic(p.notes || '');
+        if (normNotes.includes(normQuery)) return true;
+
+        return false;
+      }).sort((a, b) => {
+        // Pinned projects first, then recent
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return (b.createdAt || 0) - (a.createdAt || 0);
+      });
+    }
+
+    // Render projects list
+    function renderProjects() {
+      const grid = document.getElementById('projectsGrid');
+      const emptyState = document.getElementById('emptyState');
+      const searchInput = document.getElementById('searchInput');
+      const query = searchInput ? searchInput.value.trim() : '';
+
+      const filtered = getFilteredProjects();
+
+      // Update counters
+      document.getElementById('displayedCount').textContent = filtered.length;
+      document.getElementById('totalCount').textContent = projects.length;
+
+      // Handle Empty State
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        const emptyDesc = document.getElementById('emptyStateDesc');
+        if (query) {
+          emptyDesc.textContent = `لا يوجد مشروع يطابق البحث "${query}". يمكنك إضافته الآن بكود واسم جديد.`;
+        } else {
+          emptyDesc.textContent = `لا توجد مشاريع مسجلة حالياً. اضغط "مشروع جديد" لبدء الإضافة.`;
+        }
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(p => {
+        const isCopied = copiedProjectCode === p.code;
+        return `
+          <article 
+            id="card-${p.id}"
+            class="bg-white rounded-2xl border transition-all duration-200 overflow-hidden shadow-xs hover:shadow-md ${
+              isCopied ? 'border-emerald-500 ring-2 ring-emerald-200' : 'border-slate-200 hover:border-slate-300'
+            }"
+          >
+            <div class="p-4 sm:p-5">
+              
+              <!-- CARD TOP ROW: CODE + COPY BUTTON -->
+              <div class="flex items-center justify-between gap-3 mb-3">
+                
+                <!-- Project Code Box (High Contrast for Outdoor/Sunlight Scanning) -->
+                <div 
+                  class="cursor-pointer group flex items-center gap-2 py-1.5 px-3 bg-slate-900 hover:bg-slate-800 rounded-xl transition-colors active:scale-98"
+                  onclick="copyProjectCode('${escapeHtml(p.code)}', '${p.id}')"
+                  title="انقر لنسخ الكود"
+                >
+                  <span class="text-[10px] font-bold text-amber-400 uppercase tracking-widest">الكود</span>
+                  <span class="code-font text-base sm:text-lg font-bold text-white tracking-wider dir-ltr" dir="ltr">
+                    ${highlightMatch(p.code, query)}
+                  </span>
+                  <svg class="w-4 h-4 text-slate-400 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+
+                <!-- One-Touch Fast Copy Button -->
+                <button
+                  type="button"
+                  onclick="copyProjectCode('${escapeHtml(p.code)}', '${p.id}')"
+                  class="min-h-[44px] min-w-[100px] px-3.5 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-xs active:scale-95 ${
+                    isCopied
+                      ? 'bg-emerald-600 text-white ring-2 ring-emerald-400'
+                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  }"
+                  title="نسخ رقم المشروع للحافظة"
+                >
+                  ${
+                    isCopied
+                      ? `
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>تم النسخ!</span>
+                      `
+                      : `
+                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <span>نسخ الكود</span>
+                      `
+                  }
+                </button>
+
+              </div>
+
+              <!-- CARD MIDDLE: ARABIC & ENGLISH PROJECT NAMES -->
+              <div class="mb-3">
+                <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                  ${highlightMatch(p.nameAr, query)}
+                </h3>
+                ${
+                  p.nameEn
+                    ? `<p class="text-xs sm:text-sm font-medium text-slate-500 font-sans tracking-wide mt-0.5 dir-ltr" dir="ltr">
+                        ${highlightMatch(p.nameEn, query)}
+                      </p>`
+                    : ''
+                }
+              </div>
+
+              <!-- CARD NOTES (IF PROVIDED) -->
+              ${
+                p.notes
+                  ? `
+                  <div class="flex items-start gap-1.5 py-1.5 px-2.5 rounded-lg bg-slate-50 border border-slate-100 text-xs text-slate-600 mb-3">
+                    <svg class="w-3.5 h-3.5 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>${highlightMatch(p.notes, query)}</span>
+                  </div>
+                  `
+                  : ''
+              }
+
+              <!-- CARD FOOTER: ACTIONS (PIN, EDIT, DELETE) -->
+              <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                
+                <!-- Pin / Favorite Toggle -->
+                <button
+                  type="button"
+                  onclick="togglePin('${p.id}')"
+                  class="min-h-[40px] px-2 py-1 rounded-lg hover:bg-slate-100 flex items-center gap-1.5 font-semibold transition-colors ${
+                    p.isPinned ? 'text-amber-600 font-bold' : 'text-slate-400 hover:text-slate-600'
+                  }"
+                  title="${p.isPinned ? 'إلغاء التثبيت' : 'تثبيت في الأعلى'}"
+                >
+                  <span class="text-sm">${p.isPinned ? '★' : '☆'}</span>
+                  <span>${p.isPinned ? 'مثبت' : 'تثبيت'}</span>
+                </button>
+
+                <!-- Edit and Delete Actions -->
+                <div class="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onclick="openEditModal('${p.id}')"
+                    class="min-h-[40px] px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1 font-semibold transition-colors"
+                    title="تعديل المشروع"
+                  >
+                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                    </svg>
+                    <span>تعديل</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onclick="deleteProject('${p.id}')"
+                    class="min-h-[40px] px-2.5 py-1 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 flex items-center gap-1 font-semibold transition-colors"
+                    title="حذف المشروع"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    <span>حذف</span>
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // Copy Project Code with Visual and Haptic Feedback
+    async function copyProjectCode(code, projectId) {
+      if (!code) return;
+
+      try {
+        // Standard modern clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(code);
+        } else {
+          // Fallback for non-https or older webviews
+          const textArea = document.createElement("textarea");
+          textArea.value = code;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-9999px";
+          textArea.style.top = "-9999px";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          document.execCommand("copy");
+          textArea.remove();
+        }
+
+        // Haptic feedback for tactile feel on mobile
+        if (navigator.vibrate) {
+          try { navigator.vibrate(40); } catch(e) {}
+        }
+
+        // Update copied state
+        copiedProjectCode = code;
+        renderProjects();
+
+        // Show Toast
+        showToast(`تم نسخ الكود [${code}] بنجاح! جاهز للصق في تطبيق البصمة.`, 'success');
+
+        // Reset copied button appearance after 2.2 seconds
+        if (copiedTimer) clearTimeout(copiedTimer);
+        copiedTimer = setTimeout(() => {
+          copiedProjectCode = null;
+          renderProjects();
+        }, 2200);
+
+      } catch (err) {
+        console.error('Copy failed:', err);
+        showToast('تعذر النسخ التلقائي. يرجى التحديد والنسخ يدوياً.', 'error');
+      }
+    }
+
+    // Toggle Pinned Status
+    function togglePin(id) {
+      const proj = projects.find(p => p.id === id);
+      if (proj) {
+        proj.isPinned = !proj.isPinned;
+        saveProjects();
+        renderProjects();
+        showToast(proj.isPinned ? 'تم تثبيت المشروع في الأعلى' : 'تم إلغاء التثبيت', 'info');
+      }
+    }
+
+    // Delete Project
+    function deleteProject(id) {
+      const proj = projects.find(p => p.id === id);
+      if (!proj) return;
+
+      const confirmMsg = `هل أنت متأكد من حذف مشروع "${proj.nameAr}" (كود: ${proj.code})؟`;
+      if (confirm(confirmMsg)) {
+        projects = projects.filter(p => p.id !== id);
+        saveProjects();
+        renderProjects();
+        showToast(`تم حذف المشروع ${proj.code}`, 'info');
+      }
+    }
+
+    // Open Add Modal
+    function openAddModal(initialCode = '') {
+      document.getElementById('modalTitle').textContent = 'إضافة مشروع جديد';
+      document.getElementById('projectId').value = '';
+      document.getElementById('projectCode').value = initialCode || '';
+      document.getElementById('projectNameAr').value = '';
+      document.getElementById('projectNameEn').value = '';
+      document.getElementById('projectNotes').value = '';
+      document.getElementById('projectPinned').checked = false;
+
+      const modal = document.getElementById('projectModal');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        if (!initialCode) {
+          document.getElementById('projectCode').focus();
+        } else {
+          document.getElementById('projectNameAr').focus();
+        }
+      }, 100);
+    }
+
+    // Open Edit Modal
+    function openEditModal(id) {
+      const proj = projects.find(p => p.id === id);
+      if (!proj) return;
+
+      document.getElementById('modalTitle').textContent = 'تعديل بيانات المشروع';
+      document.getElementById('projectId').value = proj.id;
+      document.getElementById('projectCode').value = proj.code || '';
+      document.getElementById('projectNameAr').value = proj.nameAr || '';
+      document.getElementById('projectNameEn').value = proj.nameEn || '';
+      document.getElementById('projectNotes').value = proj.notes || '';
+      document.getElementById('projectPinned').checked = !!proj.isPinned;
+
+      const modal = document.getElementById('projectModal');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('projectCode').focus();
+      }, 100);
+    }
+
+    // Close Modals
+    function closeProjectModal() {
+      document.getElementById('projectModal').classList.add('hidden');
+    }
+    function closeBackupModal() {
+      document.getElementById('backupModal').classList.add('hidden');
+    }
+
+    // Toast Notification System
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      let bgClasses = 'bg-slate-900 text-white';
+      let iconSvg = `
+        <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      `;
+
+      if (type === 'error') {
+        bgClasses = 'bg-rose-900 text-white';
+        iconSvg = `
+          <svg class="w-4 h-4 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        `;
+      } else if (type === 'info') {
+        bgClasses = 'bg-slate-800 text-white';
+        iconSvg = `
+          <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        `;
+      }
+
+      toast.className = `animate-toast pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-lg border border-white/10 text-xs font-semibold ${bgClasses}`;
+      toast.innerHTML = `${iconSvg}<span>${escapeHtml(message)}</span>`;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 200);
+      }, 3000);
+    }
+
+    // Export Data as JSON
+    function exportData() {
+      try {
+        const dataStr = JSON.stringify(projects, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const dateStr = new Date().toISOString().split('T')[0];
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `project_codes_backup_${dateStr}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+
+        showToast('تم تنزيل ملف النسخة الاحتياطية بنجاح!', 'success');
+      } catch (err) {
+        console.error('Export failed:', err);
+        showToast('فشل في تصدير البيانات', 'error');
+      }
+    }
+
+    // Import Data from JSON File
+    function handleImportFile(file) {
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (!Array.isArray(imported)) {
+            throw new Error('ملف غير صالح، يجب أن يحتوي على مصفوفة مشاريع');
+          }
+
+          // Validate and sanitize
+          const validProjects = imported.filter(item => item && (item.code || item.nameAr)).map(item => ({
+            id: item.id || ('proj_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
+            code: (item.code || '').trim(),
+            nameAr: (item.nameAr || item.code || 'مشروع بدون اسم').trim(),
+            nameEn: (item.nameEn || '').trim(),
+            notes: (item.notes || '').trim(),
+            isPinned: !!item.isPinned,
+            createdAt: item.createdAt || Date.now()
+          }));
+
+          if (validProjects.length === 0) {
+            showToast('الملف لا يحتوي على مشاريع صالحة', 'error');
+            return;
+          }
+
+          const action = confirm(
+            `تم العثور على ${validProjects.length} مشروع في الملف.\n\n` +
+            `اضغط "موافق" لدمج المشاريع مع الحالية، أو "إلغاء" إذا كنت تريد استبدال كل البيانات.`
+          );
+
+          if (action) {
+            // Merge: avoid duplicating exact same codes
+            const existingCodes = new Set(projects.map(p => p.code.toLowerCase().trim()));
+            let addedCount = 0;
+            validProjects.forEach(vp => {
+              if (!existingCodes.has(vp.code.toLowerCase().trim())) {
+                projects.push(vp);
+                addedCount++;
+              }
+            });
+            saveProjects();
+            renderProjects();
+            closeBackupModal();
+            showToast(`تم استيراد ${addedCount} مشروع جديد بنجاح!`, 'success');
+          } else {
+            const replaceConfirm = confirm('تحذير: هل أنت متأكد من استبدال جميع المشاريع الحالية بمحتويات هذا الملف؟');
+            if (replaceConfirm) {
+              projects = validProjects;
+              saveProjects();
+              renderProjects();
+              closeBackupModal();
+              showToast(`تم استبدال البيانات واستيراد ${validProjects.length} مشروع!`, 'success');
+            }
+          }
+
+        } catch (err) {
+          console.error('Import parse error:', err);
+          showToast('فشل قراءة الملف. تأكد من أنه ملف JSON صحيح.', 'error');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Reset Defaults
+    function resetDefaults() {
+      const confirmReset = confirm('هل أنت متأكد من استعادة المشاريع التجريبية الافتراضية؟ سيتم الاحتفاظ بالمشاريع مع إعادة تعيين القائمة.');
+      if (confirmReset) {
+        projects = [...DEFAULT_PROJECTS];
+        saveProjects();
+        renderProjects();
+        closeBackupModal();
+        showToast('تمت استعادة المشاريع التجريبية بنجاح', 'info');
+      }
+    }
+
+    // ================= EVENT LISTENERS INITIALIZATION =================
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProjects();
+      renderProjects();
+
+      // Search Input Instant Listener
+      const searchInput = document.getElementById('searchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim();
+        if (query) {
+          clearSearchBtn.classList.remove('hidden');
+        } else {
+          clearSearchBtn.classList.add('hidden');
+        }
+        renderProjects();
+      });
+
+      // Clear search
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearSearchBtn.classList.add('hidden');
+        searchInput.focus();
+        renderProjects();
+      });
+
+      // Quick add from search button if no results found
+      document.getElementById('quickAddFromSearchBtn').addEventListener('click', () => {
+        const currentQuery = searchInput.value.trim();
+        openAddModal(currentQuery);
+      });
+
+      // Filter Tabs
+      const filterAllBtn = document.getElementById('filterAll');
+      const filterPinnedBtn = document.getElementById('filterPinned');
+
+      filterAllBtn.addEventListener('click', () => {
+        activeFilter = 'all';
+        filterAllBtn.className = 'filter-tab px-3 py-1.5 rounded-lg font-semibold bg-white text-slate-900 shadow-xs transition-colors';
+        filterPinnedBtn.className = 'filter-tab px-3 py-1.5 rounded-lg font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1';
+        renderProjects();
+      });
+
+      filterPinnedBtn.addEventListener('click', () => {
+        activeFilter = 'pinned';
+        filterPinnedBtn.className = 'filter-tab px-3 py-1.5 rounded-lg font-semibold bg-white text-slate-900 shadow-xs transition-colors flex items-center gap-1';
+        filterAllBtn.className = 'filter-tab px-3 py-1.5 rounded-lg font-semibold text-slate-600 hover:text-slate-900 transition-colors';
+        renderProjects();
+      });
+
+      // Project Form Submission (Add / Edit)
+      const projectForm = document.getElementById('projectForm');
+      projectForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const id = document.getElementById('projectId').value;
+        const code = document.getElementById('projectCode').value.trim();
+        const nameAr = document.getElementById('projectNameAr').value.trim();
+        const nameEn = document.getElementById('projectNameEn').value.trim();
+        const notes = document.getElementById('projectNotes').value.trim();
+        const isPinned = document.getElementById('projectPinned').checked;
+
+        if (!code || !nameAr) {
+          showToast('يرجى ملء كود المشروع واسم المشروع بالعربي', 'error');
+          return;
+        }
+
+        if (id) {
+          // Edit existing
+          const existing = projects.find(p => p.id === id);
+          if (existing) {
+            existing.code = code;
+            existing.nameAr = nameAr;
+            existing.nameEn = nameEn;
+            existing.notes = notes;
+            existing.isPinned = isPinned;
+            showToast(`تم تحديث المشروع [${code}] بنجاح`, 'success');
+          }
+        } else {
+          // Add new
+          const newProject = {
+            id: 'proj_' + Date.now(),
+            code,
+            nameAr,
+            nameEn,
+            notes,
+            isPinned,
+            createdAt: Date.now()
+          };
+          projects.unshift(newProject);
+          showToast(`تمت إضافة المشروع [${code}] بنجاح`, 'success');
+        }
+
+        saveProjects();
+        renderProjects();
+        closeProjectModal();
+      });
+
+      // Modal open / close triggers
+      document.getElementById('openAddModalBtn').addEventListener('click', () => openAddModal());
+      document.getElementById('closeModalBtn').addEventListener('click', closeProjectModal);
+      document.getElementById('cancelModalBtn').addEventListener('click', closeProjectModal);
+
+      // Backup modal
+      document.getElementById('backupModalBtn').addEventListener('click', () => {
+        document.getElementById('backupModal').classList.remove('hidden');
+      });
+      document.getElementById('closeBackupModalBtn').addEventListener('click', closeBackupModal);
+      document.getElementById('exportBtn').addEventListener('click', exportData);
+
+      // Import file trigger
+      const importFileInput = document.getElementById('importFileInput');
+      document.getElementById('importBtn').addEventListener('click', () => {
+        importFileInput.value = '';
+        importFileInput.click();
+      });
+      importFileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handleImportFile(e.target.files[0]);
+        }
+      });
+
+      document.getElementById('resetDefaultsBtn').addEventListener('click', resetDefaults);
+
+      // Close modal on outside backdrop click
+      window.addEventListener('click', (e) => {
+        const projectModal = document.getElementById('projectModal');
+        const backupModal = document.getElementById('backupModal');
+        if (e.target === projectModal) closeProjectModal();
+        if (e.target === backupModal) closeBackupModal();
+      });
+
+      // Keyboard shortcuts
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeProjectModal();
+          closeBackupModal();
+        }
+        // Focus search on '/'
+        if (e.key === '/' && document.activeElement !== searchInput && document.activeElement.tagName !== 'INPUT') {
+          e.preventDefault();
+          searchInput.focus();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
