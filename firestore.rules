@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['code', 'nameAr'])
+        && data.keys().hasOnly(['code', 'nameAr', 'nameEn', 'notes', 'isPinned', 'createdAt'])
+        && data.code is string && data.code.size() > 0 && data.code.size() <= 64
+        && data.nameAr is string && data.nameAr.size() > 0 && data.nameAr.size() <= 256
+        && (!('nameEn' in data) || (data.nameEn is string && data.nameEn.size() <= 256))
+        && (!('notes' in data) || (data.notes is string && data.notes.size() <= 512))
+        && (!('isPinned' in data) || data.isPinned is bool)
+        && (!('createdAt' in data) || data.createdAt is number);
+    }
+
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create: if isValidProject(request.resource.data);
+      allow update: if isValidProject(request.resource.data);
+      allow delete: if true;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
