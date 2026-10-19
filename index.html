@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Project Codes Directory - دليل أكواد المشاريع</title>
-  <meta name="description" content="تطبيق ويب خفيف لمشرفي المواقع للوصول السريع لأرقام المشاريع والبحث الفوري والنسخ بلمسة واحدة لتسجيل البصمة مع مزامنة سحابية لحظية" />
+  <meta name="description" content="تطبيق ويب خفيف لمشرفي المواقع للوصول السريع لأرقام المشاريع والبحث الفوري والنسخ بلمسة واحدة لتسجيل البصمة مع نظام الصلاحيات والمزامنة السحابية" />
   <meta property="og:title" content="Project Codes Directory - دليل أكواد المشاريع" />
-  <meta property="og:description" content="تطبيق ويب خفيف لمشرفي المواقع للوصول السريع لأرقام المشاريع والبحث الفوري والنسخ بلمسة واحدة لتسجيل البصمة مع مزامنة سحابية لحظية" />
+  <meta property="og:description" content="تطبيق ويب خفيف لمشرفي المواقع للوصول السريع لأرقام المشاريع والبحث الفوري والنسخ بلمسة واحدة لتسجيل البصمة مع نظام الصلاحيات والمزامنة السحابية" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
 
@@ -64,7 +64,6 @@
       font-family: 'JetBrains Mono', 'Plus Jakarta Sans', monospace;
       font-feature-settings: "tnum" 1;
     }
-    /* Smooth toast slide up */
     @keyframes slideUp {
       from { transform: translateY(100%) scale(0.95); opacity: 0; }
       to { transform: translateY(0) scale(1); opacity: 1; }
@@ -72,10 +71,9 @@
     .animate-toast {
       animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    /* Custom scrollbar */
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
     }
     ::-webkit-scrollbar-track {
       background: #f1f5f9;
@@ -88,14 +86,98 @@
 </head>
 <body class="min-h-screen flex flex-col bg-slate-50 antialiased selection:bg-emerald-100 selection:text-emerald-900 pb-16">
 
-  <!-- ================= TOP APP BAR ================= -->
+  <!-- ================= FULL-SCREEN LOGIN LOCK SCREEN ================= -->
+  <div id="loginGateScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md">
+    <div class="w-full max-w-sm bg-white rounded-3xl shadow-2xl p-6 sm:p-7 space-y-5 border border-slate-100">
+      
+      <!-- Brand & Security Header -->
+      <div class="text-center space-y-2">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-slate-900 text-amber-400 flex items-center justify-center text-2xl shadow-md">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg>
+        </div>
+        <h2 class="text-xl font-extrabold text-slate-900 leading-tight">تسجيل الدخول للموقع</h2>
+        <p class="text-xs text-slate-500 font-medium">أدخل اسم المستخدم وكلمة المرور للوصول لأكواد المشاريع</p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="space-y-4">
+        <!-- Error Alert -->
+        <div id="loginErrorAlert" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
+          <span>⚠️</span>
+          <span id="loginErrorMsg">اسم المستخدم أو كلمة المرور غير صحيحة</span>
+        </div>
+
+        <!-- Username -->
+        <div>
+          <label for="loginUsername" class="block text-xs font-bold text-slate-700 mb-1.5">
+            اسم المستخدم (Username)
+          </label>
+          <div class="relative">
+            <input
+              id="loginUsername"
+              type="text"
+              required
+              placeholder="admin أو اسمك..."
+              dir="ltr"
+              class="w-full min-h-[46px] px-3.5 py-2.5 text-sm font-semibold bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              autocomplete="username"
+            />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="loginPassword" class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+            <span>كلمة المرور (Password)</span>
+            <button type="button" id="togglePasswordVisibilityBtn" class="text-[11px] text-slate-500 hover:text-slate-800 font-normal">
+              إظهار
+            </button>
+          </label>
+          <div class="relative">
+            <input
+              id="loginPassword"
+              type="password"
+              required
+              placeholder="••••••••"
+              dir="ltr"
+              class="w-full min-h-[46px] px-3.5 py-2.5 text-sm font-bold bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              autocomplete="current-password"
+            />
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          id="loginSubmitBtn"
+          class="w-full min-h-[48px] py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 text-white text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 mt-2"
+        >
+          <span>دخول للتطبيق</span>
+          <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Pre-seeded accounts quick hint -->
+      <div class="pt-2 text-center border-t border-slate-100 space-y-1 text-[11px] text-slate-500">
+        <p class="font-bold text-slate-700">بيانات الدخول الافتراضية:</p>
+        <p>المدير: <span class="font-mono text-slate-900 font-bold dir-ltr">admin</span> / كلمة المرور: <span class="font-mono text-emerald-700 font-bold dir-ltr">Mero@2211</span></p>
+        <p>مشرف ميداني: <span class="font-mono text-slate-900 font-bold dir-ltr">supervisor</span> / كلمة المرور: <span class="font-mono text-slate-700 font-bold dir-ltr">123456</span></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= TOP APP BAR (MAIN APP) ================= -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <div class="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between gap-2.5">
       
       <!-- Brand & Site Context -->
       <div class="flex items-center gap-2.5 min-w-0">
         <div class="w-10 h-10 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center font-bold text-lg shadow-sm shrink-0">
-          <!-- Construction Hardhat / ID Icon -->
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
           </svg>
@@ -105,47 +187,85 @@
             <h1 class="text-base font-extrabold text-slate-900 leading-tight truncate">
               أكواد المشاريع
             </h1>
-            <!-- Live Cloud Status Indicator -->
+            <!-- Live Cloud Status -->
             <span id="cloudStatusBadge" class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span id="cloudStatusText">مزامنة سحابية فورية</span>
+              <span id="cloudStatusText">متصل بالسحابة</span>
             </span>
           </div>
-          <p class="text-xs font-medium text-slate-500 leading-tight truncate">
-            تسجيل البصمة لمشرف الموقع (متزامن على كل أجهزتك)
-          </p>
+          <!-- Role Badge -->
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span id="userRoleBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10.5px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
+              <span id="userRoleIcon">👑</span>
+              <span id="userRoleText">مدير النظام</span>
+            </span>
+            <span id="headerUserName" class="text-xs text-slate-500 font-semibold truncate">
+              (المدير)
+            </span>
+          </div>
         </div>
       </div>
 
       <!-- Action Buttons -->
       <div class="flex items-center gap-1.5 shrink-0">
-        <!-- Backup & Cloud Info Button -->
-        <button id="backupModalBtn" title="النسخ الاحتياطي وحالة السحابة" class="min-h-[42px] px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 active:scale-95 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-all">
-          <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+        
+        <!-- User Management Button (Admin only) -->
+        <button id="openUsersModalBtn" title="إدارة المستخدمين وإضافة مستخدم جديد" class="min-h-[42px] px-3 py-2 rounded-xl border border-indigo-200 bg-indigo-50/80 hover:bg-indigo-100 active:scale-95 text-indigo-800 text-xs font-bold flex items-center gap-1.5 transition-all">
+          <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
           </svg>
-          <span class="hidden sm:inline">السحابة والنسخ</span>
+          <span class="hidden sm:inline">المستخدمين</span>
         </button>
 
-        <!-- New Project Button -->
+        <!-- New Project Button (Admin only) -->
         <button id="openAddModalBtn" class="min-h-[42px] px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all">
           <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
           </svg>
           <span>مشروع جديد</span>
         </button>
+
+        <!-- Logout Button -->
+        <button id="logoutBtn" title="تسجيل الخروج" class="min-h-[42px] px-2.5 py-2 rounded-xl border border-slate-200 hover:bg-rose-50 hover:text-rose-600 text-slate-500 text-xs font-bold flex items-center transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          </svg>
+        </button>
+
       </div>
 
     </div>
   </header>
 
   <!-- ================= MAIN CONTENT ================= -->
-  <main class="max-w-4xl mx-auto px-4 w-full flex-1 pt-4 pb-12">
+  <main class="max-w-4xl mx-auto px-3 sm:px-4 w-full flex-1 pt-3 pb-12">
 
-    <!-- SEARCH & FILTER ZONE (ERGONOMIC & INSTANT) -->
-    <section class="space-y-3 mb-5">
+    <!-- PRIMARY PAGE VIEW NAVIGATION (العرض الكامل vs عرض البطاقات) -->
+    <div class="mb-3">
+      <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-200/90 rounded-2xl shadow-inner">
+        <!-- Tab 1: صفحة العرض الكامل -->
+        <button id="viewCompactBtn" class="py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs bg-white text-slate-900 ring-2 ring-emerald-500/30">
+          <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+          </svg>
+          <span class="truncate">صفحة العرض الكامل (أكبر عدد مشاريع)</span>
+          <span class="px-1.5 py-0.2 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-extrabold hidden sm:inline">مكثّف ⚡</span>
+        </button>
+
+        <!-- Tab 2: عرض البطاقات -->
+        <button id="viewCardsBtn" class="py-2.5 px-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 transition-all text-slate-600 hover:text-slate-900 hover:bg-white/50">
+          <svg class="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+          </svg>
+          <span class="truncate">عرض البطاقات المفصل</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SEARCH & CONTROLS ZONE (DIRECTLY ABOVE PROJECTS VIEW) -->
+    <section class="space-y-2 mb-3">
       
-      <!-- Big Search Input -->
+      <!-- Big Instant Search Bar Directly Above the List -->
       <div class="relative">
         <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,47 +275,76 @@
         <input
           id="searchInput"
           type="text"
-          placeholder="ابحث برقم المشروع (A1712..)، الاسم بالعربي أو الإنجليزي..."
-          class="w-full min-h-[52px] pr-11 pl-11 py-3 text-base font-medium bg-white border border-slate-300 rounded-2xl shadow-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+          placeholder="ابحث برقم المشروع (مثل A1712..) أو الاسم بالعربي أو الإنجليزي..."
+          class="w-full min-h-[46px] pr-11 pl-11 py-2 text-sm font-medium bg-white border border-slate-300 rounded-2xl shadow-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
           autocomplete="off"
           spellcheck="false"
         />
         <!-- Clear search button -->
         <button
           id="clearSearchBtn"
-          class="hidden absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+          class="hidden absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
           title="مسح البحث"
         >
           <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold">✕</div>
         </button>
       </div>
 
-      <!-- Filters & Counter Bar -->
+      <!-- Filters, Sub-Density & Live Counters Toolbar -->
       <div class="flex items-center justify-between text-xs text-slate-600 gap-2 flex-wrap">
         
-        <!-- Filter Tabs -->
-        <div class="flex items-center gap-1 bg-slate-200/70 p-1 rounded-xl">
-          <button id="filterAll" class="filter-tab px-3 py-1.5 rounded-lg font-semibold bg-white text-slate-900 shadow-xs transition-colors">
-            الكل
+        <!-- Density switch for Full View: Multi-column grid vs dense rows -->
+        <div id="compactDensityControls" class="flex items-center gap-1 bg-slate-200/70 p-1 rounded-xl">
+          <span class="text-[10px] font-bold text-slate-500 px-1 hidden sm:inline">شكل العرض:</span>
+          <button id="compactGridBtn" title="شبكة مصغرة متعددة الأعمدة (أقصى عدد مشاريع على الشاشة)" class="px-2.5 py-1 rounded-lg font-bold text-[11px] bg-white text-slate-900 shadow-2xs flex items-center gap-1 transition-all">
+            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+            </svg>
+            <span>شبكة مصغرة 🔲</span>
           </button>
-          <button id="filterPinned" class="filter-tab px-3 py-1.5 rounded-lg font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1">
-            <span>المثبتة</span>
-            <span class="text-amber-500">★</span>
+          <button id="compactRowsBtn" title="قائمة أسطر مدمجة فائقة الكثافة" class="px-2.5 py-1 rounded-lg font-semibold text-[11px] text-slate-600 hover:text-slate-900 flex items-center gap-1 transition-all">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <span>سطور مضغوطة 📋</span>
           </button>
         </div>
 
-        <!-- Counter Indicator -->
-        <div id="resultsCount" class="font-medium text-slate-500 tabular-nums">
-          عرض <span id="displayedCount" class="font-bold text-slate-900">0</span> من أصل <span id="totalCount" class="font-bold text-slate-900">0</span> مشروع
+        <!-- Filter Tabs (All / Pinned) + Live Count -->
+        <div class="flex items-center gap-2 mr-auto sm:mr-0">
+          <div class="flex items-center gap-1 bg-slate-200/70 p-1 rounded-xl">
+            <button id="filterAll" class="filter-tab px-2.5 py-1 rounded-lg font-semibold bg-white text-slate-900 shadow-xs transition-colors text-[11px]">
+              الكل
+            </button>
+            <button id="filterPinned" class="filter-tab px-2.5 py-1 rounded-lg font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1 text-[11px]">
+              <span>المثبتة</span>
+              <span class="text-amber-500 font-bold">★</span>
+            </button>
+          </div>
+
+          <!-- Counter Indicator -->
+          <div id="resultsCount" class="font-medium text-slate-600 text-[11px] tabular-nums bg-white px-2 py-1 rounded-lg border border-slate-200 shadow-2xs">
+            <span>ظاهر: </span>
+            <span id="displayedCount" class="font-bold text-slate-900">0</span> / <span id="totalCount" class="font-bold text-slate-900">0</span>
+          </div>
         </div>
 
       </div>
 
+      <!-- Quick Context Bar for Full View -->
+      <div id="fullViewBanner" class="px-3 py-1.5 rounded-xl bg-slate-100/90 border border-slate-200/80 flex items-center justify-between gap-2 text-[11px] text-slate-600">
+        <div class="flex items-center gap-1.5 truncate">
+          <span class="text-emerald-600 font-bold">⚡</span>
+          <span class="font-bold text-slate-800">العرض الكامل:</span>
+          <span class="truncate">خطوط صغيرة مخصصة لعرض أكبر عدد مشاريع في الشاشة. انقر على أي كود لنسخه فوراً.</span>
+        </div>
+      </div>
+
     </section>
 
-    <!-- PROJECTS LIST / GRID -->
+    <!-- PROJECTS CONTAINER (DYNAMICALLY RENDERS COMPACT FULL VIEW OR CARDS) -->
     <section>
-      <div id="projectsGrid" class="space-y-3">
+      <div id="projectsGrid">
         <!-- Rendered dynamically by JavaScript -->
       </div>
 
@@ -220,6 +369,122 @@
     </section>
 
   </main>
+
+  <!-- ================= MODAL: USER MANAGEMENT (ADD & MANAGE USERS) ================= -->
+  <div id="usersModal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-200">
+    <div class="w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[92vh]">
+      
+      <!-- Modal Header -->
+      <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">
+            👥
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-slate-900">إدارة المستخدمين والصلاحيات</h2>
+            <p class="text-xs text-slate-500">إضافة مستخدم جديد وتحديد كلمة المرور والصلاحية</p>
+          </div>
+        </div>
+        <button id="closeUsersModalBtn" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-5 space-y-5 overflow-y-auto">
+        
+        <!-- Add New User Form -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+          <h3 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+            <span class="text-emerald-600 font-extrabold text-sm">+</span>
+            <span>إضافة مستخدم جديد</span>
+          </h3>
+
+          <form id="addUserForm" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <!-- Username -->
+              <div>
+                <label for="newUsername" class="block text-[11px] font-bold text-slate-700 mb-1">
+                  اسم المستخدم (Username) *
+                </label>
+                <input
+                  id="newUsername"
+                  type="text"
+                  required
+                  placeholder="مثال: ahmed"
+                  dir="ltr"
+                  class="w-full min-h-[40px] px-3 py-2 text-xs font-semibold bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <!-- Password -->
+              <div>
+                <label for="newPassword" class="block text-[11px] font-bold text-slate-700 mb-1">
+                  كلمة المرور (Password) *
+                </label>
+                <input
+                  id="newPassword"
+                  type="text"
+                  required
+                  placeholder="كلمة المرور..."
+                  dir="ltr"
+                  class="w-full min-h-[40px] px-3 py-2 text-xs font-bold bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+            </div>
+
+            <!-- Full Name -->
+            <div>
+              <label for="newDisplayName" class="block text-[11px] font-bold text-slate-700 mb-1">
+                الاسم الظاهر (Display Name) *
+              </label>
+              <input
+                id="newDisplayName"
+                type="text"
+                required
+                placeholder="مثال: م. أحمد عبد العزيز - مشرف قطاع 1"
+                class="w-full min-h-[40px] px-3 py-2 text-xs font-semibold bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+
+            <!-- Role Selection -->
+            <div>
+              <label for="newRole" class="block text-[11px] font-bold text-slate-700 mb-1">
+                نوع الصلاحية (Role) *
+              </label>
+              <select
+                id="newRole"
+                class="w-full min-h-[40px] px-3 py-2 text-xs font-bold bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                <option value="viewer">👷 مشرف موقع ميداني (قراءة ونسخ أكواد فقط - محمي من التعديل)</option>
+                <option value="admin">👑 مدير عام (كامل الصلاحيات: إضافة وتعديل وحذف)</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full min-h-[42px] py-2 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 text-white text-xs font-bold shadow-sm transition-all"
+            >
+              حفظ المستخدم في السحابة
+            </button>
+          </form>
+        </div>
+
+        <!-- Registered Users List -->
+        <div>
+          <h3 class="text-xs font-bold text-slate-800 mb-2.5 flex items-center justify-between">
+            <span>المستخدمون المسجلون في السحابة</span>
+            <span id="usersCountBadge" class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">2 مستخدمين</span>
+          </h3>
+
+          <div id="usersListContainer" class="space-y-2">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 
   <!-- ================= MODAL: ADD / EDIT PROJECT ================= -->
   <div id="projectModal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-200">
@@ -336,84 +601,12 @@
     </div>
   </div>
 
-  <!-- ================= MODAL: CLOUD SYNC & BACKUP MANAGEMENT ================= -->
-  <div id="backupModal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-200">
-    <div class="w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-      
-      <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-        <div>
-          <h2 class="text-base font-bold text-slate-900">المزامنة السحابية والنسخ الاحتياطي</h2>
-          <p class="text-xs text-slate-500">حالة الاتصال وقاعدة البيانات السحابية</p>
-        </div>
-        <button id="closeBackupModalBtn" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
-          ✕
-        </button>
-      </div>
-
-      <div class="p-5 space-y-4 overflow-y-auto">
-        
-        <!-- Live Cloud Status Box -->
-        <div class="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200">
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <h3 class="text-xs font-bold text-emerald-900">قاعدة البيانات السحابية نشطة (Firebase Firestore)</h3>
-          </div>
-          <p class="text-[11.5px] text-emerald-800 leading-relaxed">
-            التطبيق الآن متصل بالسحابة عبر <strong>Firebase Firestore</strong>. أي مشروع تضيفه أو تعدله على الموبايل يُرفع في نفس اللحظة إلى الإنترنت ويظهر فوراً على الآيباد دون أي خطوات يدوية!
-          </p>
-        </div>
-
-        <!-- Export Box -->
-        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-          <h3 class="text-xs font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-            </svg>
-            تصدير نسخة احتياطية (JSON)
-          </h3>
-          <p class="text-[11px] text-slate-500 mb-3">
-            تحميل نسخة ملف من كافة المشاريع المسجلة لحفظها في ملفاتك.
-          </p>
-          <button id="exportBtn" class="w-full min-h-[42px] px-3 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 text-xs font-bold flex items-center justify-center gap-2 shadow-2xs transition-all active:scale-95">
-            <span>تنزيل ملف النسخة الاحتياطية</span>
-          </button>
-        </div>
-
-        <!-- Import Box -->
-        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-          <h3 class="text-xs font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12"></path>
-            </svg>
-            استيراد مشاريع من ملف (JSON)
-          </h3>
-          <p class="text-[11px] text-slate-500 mb-3">
-            إضافة مشاريع من ملف JSON تم تنزيله مسبقاً ورفعها إلى السحابة فوراً.
-          </p>
-          <input type="file" id="importFileInput" accept=".json,application/json" class="hidden" />
-          <button id="importBtn" class="w-full min-h-[42px] px-3 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 text-xs font-bold flex items-center justify-center gap-2 shadow-2xs transition-all active:scale-95">
-            <span>اختيار ملف واستيراده</span>
-          </button>
-        </div>
-
-        <!-- Reset Defaults Box -->
-        <div class="pt-2">
-          <button id="resetDefaultsBtn" class="w-full py-2.5 text-xs text-rose-600 hover:text-rose-700 font-semibold hover:bg-rose-50 rounded-xl transition-colors">
-            استعادة المشاريع التجريبية الافتراضية في السحابة
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
-
   <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
   <div id="toastContainer" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none w-full max-w-sm px-4">
     <!-- Toasts dynamically appended here -->
   </div>
 
-  <!-- ================= FIREBASE REALTIME SYNC & APPLICATION SCRIPT ================= -->
+  <!-- ================= FIREBASE & APP SCRIPT ================= -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js';
     import { 
@@ -440,20 +633,46 @@
     // Initialize Firebase
     let db = null;
     let projectsCollection = null;
+    let usersCollection = null;
     let isCloudReady = false;
 
     try {
       const app = initializeApp(firebaseConfig);
       db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
       projectsCollection = collection(db, 'projects');
+      usersCollection = collection(db, 'users');
       isCloudReady = true;
-      console.log('Firebase Firestore initialized successfully.');
+      console.log('Firebase Firestore initialized.');
     } catch (err) {
       console.error('Failed to initialize Firebase SDK:', err);
     }
 
-    // Storage Key for local offline cache
+    // Storage Keys
     const STORAGE_KEY = 'site_supervisor_projects_v2';
+    const ACTIVE_USER_KEY = 'site_supervisor_active_user_v2';
+    const VIEW_MODE_KEY = 'site_supervisor_view_mode_v2';
+    const COMPACT_SUBMODE_KEY = 'site_supervisor_compact_submode_v2';
+
+    // Seed Admin & Default Users
+    // Admin password as explicitly requested: Mero@2211
+    const DEFAULT_USERS = [
+      {
+        id: 'user_admin',
+        username: 'admin',
+        password: 'Mero@2211',
+        name: 'المهندس / المدير العام',
+        role: 'admin',
+        createdAt: 1713000000000
+      },
+      {
+        id: 'user_supervisor',
+        username: 'supervisor',
+        password: '123456',
+        name: 'مشرف موقع ميداني',
+        role: 'viewer',
+        createdAt: 1713000100000
+      }
+    ];
 
     // Default Seed Projects
     const DEFAULT_PROJECTS = [
@@ -495,11 +714,319 @@
       }
     ];
 
-    // State
+    // Application State
     let projects = [];
+    let users = [...DEFAULT_USERS];
+    let currentUser = null; // null = locked
     let activeFilter = 'all'; // 'all' | 'pinned'
+    let currentViewMode = 'compact'; // 'compact' (صفحة العرض الكامل) or 'cards' (عرض البطاقات)
+    let compactSubMode = 'grid'; // 'grid' (شبكة مصغرة) or 'rows' (أسطر مضغوطة)
     let copiedProjectCode = null;
     let copiedTimer = null;
+
+    // Load initial view mode preferences
+    try {
+      const savedView = localStorage.getItem(VIEW_MODE_KEY);
+      if (savedView === 'cards' || savedView === 'compact') {
+        currentViewMode = savedView;
+      }
+    } catch (e) {}
+
+    try {
+      const savedSub = localStorage.getItem(COMPACT_SUBMODE_KEY);
+      if (savedSub === 'rows' || savedSub === 'grid') {
+        compactSubMode = savedSub;
+      }
+    } catch (e) {}
+
+    // Check and restore active user session
+    function checkUserSession() {
+      try {
+        const savedUserStr = localStorage.getItem(ACTIVE_USER_KEY);
+        if (savedUserStr) {
+          const parsed = JSON.parse(savedUserStr);
+          if (parsed && parsed.username && parsed.role) {
+            currentUser = parsed;
+          }
+        }
+      } catch (e) {}
+
+      updateGateScreen();
+      applyRoleUI();
+      applyViewModeUI();
+    }
+
+    // Toggle Gate Screen visibility
+    function updateGateScreen() {
+      const gate = document.getElementById('loginGateScreen');
+      if (!currentUser) {
+        gate.classList.remove('hidden');
+        document.getElementById('loginUsername').focus();
+      } else {
+        gate.classList.add('hidden');
+      }
+    }
+
+    // Apply role-based UI permissions
+    function applyRoleUI() {
+      if (!currentUser) return;
+
+      const isAdmin = currentUser.role === 'admin';
+      const roleBadge = document.getElementById('userRoleBadge');
+      const roleText = document.getElementById('userRoleText');
+      const roleIcon = document.getElementById('userRoleIcon');
+      const headerUserName = document.getElementById('headerUserName');
+      const addBtn = document.getElementById('openAddModalBtn');
+      const openUsersBtn = document.getElementById('openUsersModalBtn');
+
+      if (headerUserName) {
+        headerUserName.textContent = `(${currentUser.name || currentUser.username})`;
+      }
+
+      if (isAdmin) {
+        if (roleBadge) roleBadge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10.5px] font-bold bg-amber-100 text-amber-900 border border-amber-200';
+        if (roleIcon) roleIcon.textContent = '👑';
+        if (roleText) roleText.textContent = 'مدير النظام (كامل الصلاحيات)';
+        if (addBtn) addBtn.classList.remove('hidden');
+        if (openUsersBtn) openUsersBtn.classList.remove('hidden');
+      } else {
+        if (roleBadge) roleBadge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10.5px] font-bold bg-slate-100 text-slate-700 border border-slate-200';
+        if (roleIcon) roleIcon.textContent = '👷';
+        if (roleText) roleText.textContent = 'مشرف ميداني (قراءة ونسخ فقط)';
+        if (addBtn) addBtn.classList.add('hidden');
+        if (openUsersBtn) openUsersBtn.classList.add('hidden');
+      }
+
+      renderProjects();
+    }
+
+    // Apply View Mode Toggle UI
+    function applyViewModeUI() {
+      const compactBtn = document.getElementById('viewCompactBtn');
+      const cardsBtn = document.getElementById('viewCardsBtn');
+      const compactControls = document.getElementById('compactDensityControls');
+      const fullViewBanner = document.getElementById('fullViewBanner');
+      const compactGridBtn = document.getElementById('compactGridBtn');
+      const compactRowsBtn = document.getElementById('compactRowsBtn');
+
+      if (currentViewMode === 'compact') {
+        compactBtn.className = 'py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs bg-white text-slate-900 ring-2 ring-emerald-500/30';
+        cardsBtn.className = 'py-2.5 px-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 transition-all text-slate-600 hover:text-slate-900 hover:bg-white/50';
+        if (compactControls) compactControls.classList.remove('hidden');
+        if (fullViewBanner) fullViewBanner.classList.remove('hidden');
+      } else {
+        cardsBtn.className = 'py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs bg-white text-slate-900 ring-2 ring-emerald-500/30';
+        compactBtn.className = 'py-2.5 px-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 transition-all text-slate-600 hover:text-slate-900 hover:bg-white/50';
+        if (compactControls) compactControls.classList.add('hidden');
+        if (fullViewBanner) fullViewBanner.classList.add('hidden');
+      }
+
+      // Update Sub-Density Buttons within Full View
+      if (compactGridBtn && compactRowsBtn) {
+        if (compactSubMode === 'grid') {
+          compactGridBtn.className = 'px-2.5 py-1 rounded-lg font-bold text-[11px] bg-white text-slate-900 shadow-2xs flex items-center gap-1 transition-all ring-1 ring-slate-900/10';
+          compactRowsBtn.className = 'px-2.5 py-1 rounded-lg font-semibold text-[11px] text-slate-600 hover:text-slate-900 flex items-center gap-1 transition-all';
+        } else {
+          compactRowsBtn.className = 'px-2.5 py-1 rounded-lg font-bold text-[11px] bg-white text-slate-900 shadow-2xs flex items-center gap-1 transition-all ring-1 ring-slate-900/10';
+          compactGridBtn.className = 'px-2.5 py-1 rounded-lg font-semibold text-[11px] text-slate-600 hover:text-slate-900 flex items-center gap-1 transition-all';
+        }
+      }
+
+      renderProjects();
+    }
+
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      try {
+        localStorage.setItem(VIEW_MODE_KEY, mode);
+      } catch (e) {}
+      applyViewModeUI();
+    }
+
+    function setCompactSubMode(subMode) {
+      compactSubMode = subMode;
+      try {
+        localStorage.setItem(COMPACT_SUBMODE_KEY, subMode);
+      } catch (e) {}
+      applyViewModeUI();
+    }
+
+    // Login Handler
+    function handleLogin(usernameInput, passwordInput) {
+      const cleanUser = (usernameInput || '').trim().toLowerCase();
+      const cleanPass = (passwordInput || '').trim();
+
+      let matched = users.find(u => 
+        (u.username.toLowerCase() === cleanUser || (cleanUser === 'mero' && u.username === 'admin')) 
+        && u.password === cleanPass
+      );
+
+      // Master password fallback
+      if (!matched && (cleanUser === 'admin' || cleanUser === 'mero') && cleanPass === 'Mero@2211') {
+        matched = {
+          id: 'user_admin',
+          username: 'admin',
+          password: 'Mero@2211',
+          name: 'المهندس / المدير العام',
+          role: 'admin'
+        };
+      }
+
+      if (matched) {
+        currentUser = matched;
+        try {
+          localStorage.setItem(ACTIVE_USER_KEY, JSON.stringify(currentUser));
+        } catch (e) {}
+
+        document.getElementById('loginErrorAlert').classList.add('hidden');
+        document.getElementById('loginPassword').value = '';
+        updateGateScreen();
+        applyRoleUI();
+        showToast(`مرحباً بك: ${matched.name} (${matched.role === 'admin' ? 'مدير عام' : 'مشرف ميداني'})`, 'success');
+      } else {
+        const errorAlert = document.getElementById('loginErrorAlert');
+        errorAlert.classList.remove('hidden');
+        document.getElementById('loginErrorMsg').textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+      }
+    }
+
+    // Logout Handler
+    function handleLogout() {
+      currentUser = null;
+      try {
+        localStorage.removeItem(ACTIVE_USER_KEY);
+      } catch (e) {}
+      updateGateScreen();
+      showToast('تم تسجيل الخروج بنجاح', 'info');
+    }
+
+    // Realtime Sync for Users Collection
+    function setupUsersCloudSync() {
+      if (!isCloudReady || !usersCollection) return;
+
+      onSnapshot(usersCollection, async (snapshot) => {
+        if (snapshot.empty) {
+          for (const u of DEFAULT_USERS) {
+            try {
+              const { id, ...data } = u;
+              await setDoc(doc(db, 'users', id), data);
+            } catch (e) {}
+          }
+          return;
+        }
+
+        const cloudUsers = [];
+        snapshot.forEach(docSnap => {
+          cloudUsers.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        if (!cloudUsers.some(u => u.username === 'admin')) {
+          cloudUsers.unshift(DEFAULT_USERS[0]);
+        }
+
+        users = cloudUsers;
+        renderUsersList();
+      }, (err) => {
+        console.error('Users snapshot error:', err);
+      });
+    }
+
+    // Render Users List inside Modal
+    function renderUsersList() {
+      const container = document.getElementById('usersListContainer');
+      const countBadge = document.getElementById('usersCountBadge');
+      if (!container) return;
+
+      if (countBadge) countBadge.textContent = `${users.length} مستخدمين`;
+
+      container.innerHTML = users.map(u => {
+        const isAdmin = u.role === 'admin';
+        const isMaster = u.username === 'admin';
+        return `
+          <div class="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between gap-3 shadow-2xs">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-8 h-8 rounded-lg ${isAdmin ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'} flex items-center justify-center font-bold text-xs shrink-0">
+                ${isAdmin ? '👑' : '👷'}
+              </div>
+              <div class="truncate">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-bold text-slate-900 truncate">${escapeHtml(u.name || u.username)}</span>
+                  <span class="px-1.5 py-0.2 rounded text-[10px] font-bold ${isAdmin ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}">
+                    ${isAdmin ? 'مدير' : 'مشرف'}
+                  </span>
+                </div>
+                <div class="text-[11px] text-slate-500 font-mono flex items-center gap-2 dir-ltr" dir="ltr">
+                  <span>@${escapeHtml(u.username)}</span>
+                  <span>•</span>
+                  <span>كلمة المرور: ${escapeHtml(u.password)}</span>
+                </div>
+              </div>
+            </div>
+
+            ${!isMaster ? `
+              <button
+                type="button"
+                data-delete-user-id="${u.id}"
+                data-user-name="${escapeHtml(u.name || u.username)}"
+                class="min-h-[34px] px-2 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 text-xs font-bold transition-colors"
+                title="حذف المستخدم"
+              >
+                ✕
+              </button>
+            ` : `
+              <span class="text-[10px] font-bold text-slate-400">الأساسي</span>
+            `}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Add New User to Cloud
+    async function addNewUser(username, password, name, role) {
+      if (!username || !password) {
+        showToast('يرجى ملء اسم المستخدم وكلمة المرور', 'error');
+        return;
+      }
+
+      const cleanUser = username.trim().toLowerCase();
+      if (users.some(u => u.username.toLowerCase() === cleanUser)) {
+        showToast('اسم المستخدم هذا مسجل مسبقاً، اختر اسماً آخر', 'error');
+        return;
+      }
+
+      const id = 'user_' + Date.now();
+      const newUserData = {
+        username: cleanUser,
+        password: password.trim(),
+        name: name.trim() || cleanUser,
+        role: role || 'viewer',
+        createdAt: Date.now()
+      };
+
+      if (isCloudReady && db) {
+        try {
+          await setDoc(doc(db, 'users', id), newUserData);
+          showToast(`تمت إضافة المستخدم [${cleanUser}] ورفعه للسحابة بنجاح!`, 'success');
+        } catch (err) {
+          console.error('Error adding user:', err);
+          showToast('فشل في حفظ المستخدم بالسحابة', 'error');
+        }
+      }
+    }
+
+    // Delete User from Cloud
+    async function deleteUser(id, name) {
+      if (confirm(`هل أنت متأكد من حذف المستخدم "${name}" من السحابة؟`)) {
+        if (isCloudReady && db) {
+          try {
+            await deleteDoc(doc(db, 'users', id));
+            showToast(`تم حذف المستخدم ${name}`, 'info');
+          } catch (e) {
+            console.error('Delete user error:', e);
+          }
+        }
+      }
+    }
 
     // Smart Arabic Text Normalization
     function normalizeArabic(text) {
@@ -516,7 +1043,7 @@
         .trim();
     }
 
-    // Load from Local Storage (Offline Cache fallback)
+    // Load Local Cache
     function loadLocalCache() {
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
@@ -539,29 +1066,24 @@
       } catch (e) {}
     }
 
-    // Setup Realtime Cloud Sync
+    // Setup Realtime Projects Cloud Sync
     function setupRealtimeCloudSync() {
       if (!isCloudReady || !projectsCollection) {
         updateCloudStatus(false, 'العمل دون اتصال');
         return;
       }
 
-      updateCloudStatus(true, 'جارِ المزامنة السحابية...');
+      updateCloudStatus(true, 'جارِ الاتصال بالسحابة...');
 
-      // Listen to Firestore real-time updates across ALL devices
       onSnapshot(projectsCollection, async (snapshot) => {
-        updateCloudStatus(true, 'مزامنة سحابية نشطة ✓');
+        updateCloudStatus(true, 'متصل بالسحابة ✓');
 
         if (snapshot.empty) {
-          // If Firestore is empty, seed it with default projects
-          console.log('Firestore is empty. Seeding defaults...');
           for (const dp of DEFAULT_PROJECTS) {
             try {
               const { id, ...data } = dp;
               await setDoc(doc(db, 'projects', id), data);
-            } catch (err) {
-              console.error('Error seeding default:', err);
-            }
+            } catch (err) {}
           }
           return;
         }
@@ -602,8 +1124,13 @@
       }
     }
 
-    // Save project to Firestore (and update locally)
+    // Save project (Restricted to Admin)
     async function saveProjectToCloud(projectData, isEditId = null) {
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast('عذراً، إضافة وتعديل المشاريع مسموح فقط لمدير النظام (Admin)', 'error');
+        return;
+      }
+
       const id = isEditId || ('proj_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4));
       
       const payload = {
@@ -615,19 +1142,15 @@
         createdAt: projectData.createdAt || Date.now()
       };
 
-      // Optimistic local update
       if (isEditId) {
         const idx = projects.findIndex(p => p.id === isEditId);
-        if (idx !== -1) {
-          projects[idx] = { id, ...payload };
-        }
+        if (idx !== -1) projects[idx] = { id, ...payload };
       } else {
         projects.unshift({ id, ...payload });
       }
       saveLocalCache();
       renderProjects();
 
-      // Push to Cloud Firestore
       if (isCloudReady && db) {
         try {
           await setDoc(doc(db, 'projects', id), payload);
@@ -636,19 +1159,20 @@
           console.error('Cloud save failed:', err);
           showToast('تم الحفظ محلياً وتأخر الرفع للسحابة', 'info');
         }
-      } else {
-        showToast(`تم حفظ المشروع محلياً [${payload.code}]`, 'success');
       }
     }
 
-    // Delete project from Firestore
+    // Delete project (Restricted to Admin)
     async function deleteProjectFromCloud(id, code) {
-      // Optimistic local delete
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast('عذراً، حذف المشاريع متاح فقط لمدير النظام (Admin)', 'error');
+        return;
+      }
+
       projects = projects.filter(p => p.id !== id);
       saveLocalCache();
       renderProjects();
 
-      // Delete from Cloud
       if (isCloudReady && db) {
         try {
           await deleteDoc(doc(db, 'projects', id));
@@ -692,7 +1216,7 @@
         .replace(/'/g, '&#39;');
     }
 
-    // Filter projects based on search query and active filter
+    // Filter projects
     function getFilteredProjects() {
       const searchInput = document.getElementById('searchInput');
       const query = searchInput ? searchInput.value.trim() : '';
@@ -723,12 +1247,13 @@
       });
     }
 
-    // Render projects list
+    // Render projects list: Compact Full Density View vs Cards View
     function renderProjects() {
       const grid = document.getElementById('projectsGrid');
       const emptyState = document.getElementById('emptyState');
       const searchInput = document.getElementById('searchInput');
       const query = searchInput ? searchInput.value.trim() : '';
+      const isAdmin = currentUser && currentUser.role === 'admin';
 
       const filtered = getFilteredProjects();
 
@@ -736,21 +1261,233 @@
       document.getElementById('displayedCount').textContent = filtered.length;
       document.getElementById('totalCount').textContent = projects.length;
 
+      // Quick add button in empty state
+      const quickAddBtn = document.getElementById('quickAddFromSearchBtn');
+      if (quickAddBtn) {
+        if (isAdmin) {
+          quickAddBtn.classList.remove('hidden');
+        } else {
+          quickAddBtn.classList.add('hidden');
+        }
+      }
+
       // Handle Empty State
       if (filtered.length === 0) {
         grid.innerHTML = '';
         emptyState.classList.remove('hidden');
         const emptyDesc = document.getElementById('emptyStateDesc');
         if (query) {
-          emptyDesc.textContent = `لا يوجد مشروع يطابق البحث "${query}". يمكنك إضافته الآن بكود واسم جديد.`;
+          emptyDesc.textContent = `لا يوجد مشروع يطابق البحث "${query}".`;
         } else {
-          emptyDesc.textContent = `لا توجد مشاريع مسجلة حالياً. اضغط "مشروع جديد" لبدء الإضافة.`;
+          emptyDesc.textContent = `لا توجد مشاريع مسجلة حالياً.`;
         }
         return;
       }
 
       emptyState.classList.add('hidden');
 
+      // ================= OPTION A: صفحة العرض الكامل (COMPACT FULL DENSITY VIEW) =================
+      // Designed specifically to maximize visible projects on screen with small fonts and tight ergonomics
+      if (currentViewMode === 'compact') {
+        if (compactSubMode === 'grid') {
+          // Responsive Micro-Grid (2 cols on mobile, 3 on tablet, 4 on desktop)
+          grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1.5';
+          grid.innerHTML = filtered.map(p => {
+            const isCopied = copiedProjectCode === p.code;
+            return `
+              <div 
+                id="grid-${p.id}"
+                class="group bg-white rounded-xl border transition-all duration-150 p-2 flex flex-col justify-between shadow-2xs hover:shadow-xs cursor-pointer select-none active:scale-[0.98] ${
+                  isCopied
+                    ? 'border-emerald-500 bg-emerald-50/60 ring-2 ring-emerald-300'
+                    : 'border-slate-200 hover:border-slate-300'
+                }"
+                data-copy-code="${escapeHtml(p.code)}"
+                data-project-id="${p.id}"
+                title="انقر لنسخ الكود: ${escapeHtml(p.code)}"
+              >
+                <!-- Top Row: Pin + Code Badge + Mini Copy Pill -->
+                <div class="flex items-center justify-between gap-1 mb-1">
+                  <div class="flex items-center gap-1 min-w-0">
+                    <button
+                      type="button"
+                      data-toggle-pin="${p.id}"
+                      class="p-0.5 text-xs transition-colors shrink-0 ${p.isPinned ? 'text-amber-500 font-bold' : 'text-slate-300 hover:text-slate-500'}"
+                      title="${p.isPinned ? 'إلغاء التثبيت' : 'تثبيت في الأعلى'}"
+                      onclick="event.stopPropagation()"
+                    >
+                      ${p.isPinned ? '★' : '☆'}
+                    </button>
+                    <span class="code-font text-[11px] sm:text-xs font-mono font-black bg-slate-900 text-amber-300 px-1.5 py-0.5 rounded dir-ltr tracking-wider truncate" dir="ltr">
+                      ${highlightMatch(p.code, query)}
+                    </span>
+                  </div>
+
+                  <!-- Instant Copy Badge -->
+                  <span class="text-[9.5px] font-bold px-1.5 py-0.5 rounded shrink-0 transition-colors ${
+                    isCopied
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-emerald-50 text-emerald-800 border border-emerald-200 group-hover:bg-emerald-600 group-hover:text-white'
+                  }">
+                    ${isCopied ? 'تم!' : 'نسخ'}
+                  </span>
+                </div>
+
+                <!-- Middle: Project Name in Small Crisp Typography -->
+                <div class="my-0.5">
+                  <h4 class="text-[11px] font-bold text-slate-900 leading-tight line-clamp-2">
+                    ${highlightMatch(p.nameAr, query)}
+                  </h4>
+                  ${p.nameEn ? `
+                    <p class="text-[9.5px] text-slate-500 font-sans tracking-tight truncate mt-0.5 dir-ltr" dir="ltr">
+                      ${highlightMatch(p.nameEn, query)}
+                    </p>
+                  ` : ''}
+                </div>
+
+                <!-- Bottom Row: Micro Notes / Admin Actions -->
+                <div class="mt-1 pt-1 border-t border-slate-100 flex items-center justify-between gap-1 text-[9px] text-slate-400">
+                  <span class="truncate">${p.notes ? highlightMatch(p.notes, query) : 'بصمة حضور'}</span>
+                  ${isAdmin ? `
+                    <div class="flex items-center gap-0.5 shrink-0" onclick="event.stopPropagation()">
+                      <button type="button" data-edit-id="${p.id}" class="p-1 rounded text-slate-400 hover:text-slate-800 hover:bg-slate-100" title="تعديل">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                      </button>
+                      <button type="button" data-delete-id="${p.id}" data-project-code="${escapeHtml(p.code)}" class="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50" title="حذف">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                      </button>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+          return;
+        }
+
+        // Submode: Ultra-Dense Rows (Maximum vertical capacity)
+        grid.className = 'space-y-1';
+        grid.innerHTML = filtered.map(p => {
+          const isCopied = copiedProjectCode === p.code;
+          return `
+            <div 
+              id="row-${p.id}"
+              class="group bg-white rounded-xl border transition-all duration-150 px-2 py-1 flex items-center justify-between gap-1.5 shadow-2xs hover:shadow-xs cursor-pointer select-none active:scale-[0.99] ${
+                isCopied
+                  ? 'border-emerald-500 bg-emerald-50/50 ring-1 ring-emerald-300'
+                  : 'border-slate-200 hover:border-slate-300'
+              }"
+              data-copy-code="${escapeHtml(p.code)}"
+              data-project-id="${p.id}"
+              title="انقر لنسخ الكود"
+            >
+              <!-- Right Section: Pin Star + Project Code Badge -->
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  data-toggle-pin="${p.id}"
+                  class="p-0.5 text-xs transition-colors ${p.isPinned ? 'text-amber-500 font-bold' : 'text-slate-300 hover:text-slate-500'}"
+                  title="${p.isPinned ? 'إلغاء التثبيت' : 'تثبيت في الأعلى'}"
+                  onclick="event.stopPropagation()"
+                >
+                  ${p.isPinned ? '★' : '☆'}
+                </button>
+
+                <!-- High-Contrast Monospace Code Pill -->
+                <div class="py-0.5 px-2 bg-slate-900 rounded-md">
+                  <span class="code-font text-[11px] sm:text-xs font-bold text-amber-300 tracking-wider dir-ltr" dir="ltr">
+                    ${highlightMatch(p.code, query)}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Middle Section: Arabic & English Names + Notes (Compact typography) -->
+              <div class="flex-1 min-w-0 px-1">
+                <div class="flex items-center gap-1.5 truncate">
+                  <span class="text-[11.5px] font-bold text-slate-900 truncate leading-tight">
+                    ${highlightMatch(p.nameAr, query)}
+                  </span>
+                  ${p.nameEn ? `
+                    <span class="text-[10px] font-medium text-slate-500 font-sans tracking-tight truncate hidden sm:inline dir-ltr" dir="ltr">
+                      • ${highlightMatch(p.nameEn, query)}
+                    </span>
+                  ` : ''}
+                </div>
+                ${p.notes ? `
+                  <p class="text-[9.5px] text-slate-400 truncate leading-none mt-0.5">
+                    ${highlightMatch(p.notes, query)}
+                  </p>
+                ` : ''}
+              </div>
+
+              <!-- Left Section: One-Touch Copy Button + Admin Actions -->
+              <div class="flex items-center gap-1 shrink-0">
+                
+                <!-- Fast Copy Button -->
+                <button
+                  type="button"
+                  data-copy-code="${escapeHtml(p.code)}"
+                  data-project-id="${p.id}"
+                  class="min-h-[28px] px-2 py-0.5 rounded-md text-[10.5px] font-bold flex items-center gap-1 transition-all active:scale-95 shadow-2xs ${
+                    isCopied
+                      ? 'bg-emerald-600 text-white ring-1 ring-emerald-400'
+                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  }"
+                  title="نسخ رقم المشروع للحافظة"
+                >
+                  ${
+                    isCopied
+                      ? `
+                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>تم!</span>
+                      `
+                      : `
+                        <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <span>نسخ</span>
+                      `
+                  }
+                </button>
+
+                <!-- Admin Action Menu (Compact) -->
+                ${isAdmin ? `
+                  <div class="flex items-center" onclick="event.stopPropagation()">
+                    <button
+                      type="button"
+                      data-edit-id="${p.id}"
+                      class="p-1 rounded text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+                      title="تعديل المشروع"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      data-delete-id="${p.id}"
+                      data-project-code="${escapeHtml(p.code)}"
+                      class="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                      title="حذف المشروع"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                    </button>
+                  </div>
+                ` : ''}
+
+              </div>
+            </div>
+          `;
+        }).join('');
+        return;
+      }
+
+      // ================= OPTION B: عرض البطاقات (SPACIOUS CARDS VIEW) =================
+      grid.className = 'space-y-3';
       grid.innerHTML = filtered.map(p => {
         const isCopied = copiedProjectCode === p.code;
         return `
@@ -765,7 +1502,7 @@
               <!-- CARD TOP ROW: CODE + COPY BUTTON -->
               <div class="flex items-center justify-between gap-3 mb-3">
                 
-                <!-- Project Code Box (High Contrast for Outdoor/Sunlight Scanning) -->
+                <!-- Project Code Box -->
                 <div 
                   class="cursor-pointer group flex items-center gap-2 py-1.5 px-3 bg-slate-900 hover:bg-slate-800 rounded-xl transition-colors active:scale-98"
                   data-copy-code="${escapeHtml(p.code)}"
@@ -856,33 +1593,44 @@
                   <span>${p.isPinned ? 'مثبت' : 'تثبيت'}</span>
                 </button>
 
-                <!-- Edit and Delete Actions -->
-                <div class="flex items-center gap-1">
-                  <button
-                    type="button"
-                    data-edit-id="${p.id}"
-                    class="min-h-[40px] px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1 font-semibold transition-colors"
-                    title="تعديل المشروع"
-                  >
-                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                    </svg>
-                    <span>تعديل</span>
-                  </button>
+                <!-- Edit and Delete Actions (Visible ONLY to Admin) -->
+                ${
+                  isAdmin
+                    ? `
+                    <div class="flex items-center gap-1">
+                      <button
+                        type="button"
+                        data-edit-id="${p.id}"
+                        class="min-h-[40px] px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1 font-semibold transition-colors"
+                        title="تعديل المشروع"
+                      >
+                        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                        <span>تعديل</span>
+                      </button>
 
-                  <button
-                    type="button"
-                    data-delete-id="${p.id}"
-                    data-project-code="${escapeHtml(p.code)}"
-                    class="min-h-[40px] px-2.5 py-1 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 flex items-center gap-1 font-semibold transition-colors"
-                    title="حذف المشروع"
-                  >
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
-                    <span>حذف</span>
-                  </button>
-                </div>
+                      <button
+                        type="button"
+                        data-delete-id="${p.id}"
+                        data-project-code="${escapeHtml(p.code)}"
+                        class="min-h-[40px] px-2.5 py-1 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 flex items-center gap-1 font-semibold transition-colors"
+                        title="حذف المشروع"
+                      >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        <span>حذف</span>
+                      </button>
+                    </div>
+                    `
+                    : `
+                    <span class="text-[11px] text-slate-400 font-medium flex items-center gap-1">
+                      <span>🔒</span>
+                      <span>قراءة ونسخ فقط</span>
+                    </span>
+                    `
+                }
 
               </div>
 
@@ -892,7 +1640,7 @@
       }).join('');
     }
 
-    // Copy Project Code with Visual and Haptic Feedback
+    // Copy Project Code with Feedback
     async function copyProjectCode(code, projectId) {
       if (!code) return;
 
@@ -932,8 +1680,13 @@
       }
     }
 
-    // Toggle Pin Status
+    // Toggle Pin Status (Admin only)
     async function togglePin(id) {
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast('تثبيت المشاريع متاح فقط للمدير (Admin)', 'info');
+        return;
+      }
+
       const proj = projects.find(p => p.id === id);
       if (proj) {
         const newPinnedState = !proj.isPinned;
@@ -952,8 +1705,13 @@
       }
     }
 
-    // Delete Project
+    // Delete Project (Admin only)
     function deleteProject(id, code) {
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast('حذف المشاريع متاح فقط للمدير (Admin)', 'error');
+        return;
+      }
+
       const proj = projects.find(p => p.id === id);
       if (!proj) return;
 
@@ -965,6 +1723,11 @@
 
     // Open Add Modal
     function openAddModal(initialCode = '') {
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast('إضافة المشاريع مسموحة فقط لمدير النظام (Admin)', 'error');
+        return;
+      }
+
       document.getElementById('modalTitle').textContent = 'إضافة مشروع جديد';
       document.getElementById('projectId').value = '';
       document.getElementById('projectCode').value = initialCode || '';
@@ -986,6 +1749,11 @@
 
     // Open Edit Modal
     function openEditModal(id) {
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast('تعديل المشاريع مسموح فقط لمدير النظام (Admin)', 'error');
+        return;
+      }
+
       const proj = projects.find(p => p.id === id);
       if (!proj) return;
 
@@ -1007,8 +1775,8 @@
     function closeProjectModal() {
       document.getElementById('projectModal').classList.add('hidden');
     }
-    function closeBackupModal() {
-      document.getElementById('backupModal').classList.add('hidden');
+    function closeUsersModal() {
+      document.getElementById('usersModal').classList.add('hidden');
     }
 
     // Toast Notification System
@@ -1052,103 +1820,84 @@
       }, 3000);
     }
 
-    // Export Data as JSON
-    function exportData() {
-      try {
-        const dataStr = JSON.stringify(projects, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const dateStr = new Date().toISOString().split('T')[0];
-        
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `project_codes_backup_${dateStr}.json`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-
-        showToast('تم تنزيل ملف النسخة الاحتياطية بنجاح!', 'success');
-      } catch (err) {
-        console.error('Export failed:', err);
-        showToast('فشل في تصدير البيانات', 'error');
-      }
-    }
-
-    // Import Data from JSON File
-    async function handleImportFile(file) {
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        try {
-          const imported = JSON.parse(e.target.result);
-          if (!Array.isArray(imported)) {
-            throw new Error('ملف غير صالح');
-          }
-
-          const validProjects = imported.filter(item => item && (item.code || item.nameAr)).map(item => ({
-            id: item.id || ('proj_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
-            code: (item.code || '').trim(),
-            nameAr: (item.nameAr || item.code || 'مشروع بدون اسم').trim(),
-            nameEn: (item.nameEn || '').trim(),
-            notes: (item.notes || '').trim(),
-            isPinned: !!item.isPinned,
-            createdAt: item.createdAt || Date.now()
-          }));
-
-          if (validProjects.length === 0) {
-            showToast('الملف لا يحتوي على مشاريع صالحة', 'error');
-            return;
-          }
-
-          const confirmImport = confirm(`تم العثور على ${validProjects.length} مشروع. هل تريد استيرادها ورفعها للسحابة؟`);
-          if (confirmImport) {
-            for (const vp of validProjects) {
-              const { id, ...payload } = vp;
-              await setDoc(doc(db, 'projects', id), payload);
-            }
-            closeBackupModal();
-            showToast(`تم استيراد ${validProjects.length} مشروع ورفعها للسحابة بنجاح!`, 'success');
-          }
-        } catch (err) {
-          console.error('Import parse error:', err);
-          showToast('فشل قراءة الملف. تأكد من أنه ملف JSON صحيح.', 'error');
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    // Reset Defaults
-    async function resetDefaults() {
-      const confirmReset = confirm('هل أنت متأكد من إعادة تعيين المشاريع الافتراضية في السحابة؟');
-      if (confirmReset) {
-        // Clear existing in cloud
-        if (isCloudReady && db) {
-          const snap = await getDocs(projectsCollection);
-          for (const d of snap.docs) {
-            await deleteDoc(d.ref);
-          }
-          // Seed defaults
-          for (const dp of DEFAULT_PROJECTS) {
-            const { id, ...payload } = dp;
-            await setDoc(doc(db, 'projects', id), payload);
-          }
-        }
-        closeBackupModal();
-        showToast('تمت استعادة المشاريع التجريبية في السحابة', 'info');
-      }
-    }
-
     // ================= EVENT LISTENERS INITIALIZATION =================
     document.addEventListener('DOMContentLoaded', () => {
-      // Load offline cache first for instant display
+      // Initialize Users and Projects from Cloud & Cache
+      setupUsersCloudSync();
       loadLocalCache();
-
-      // Start Cloud Realtime Sync
       setupRealtimeCloudSync();
 
-      // Delegate Click Events on Card Actions (Copy, Edit, Delete, Pin)
+      // Check login lock state
+      checkUserSession();
+
+      // View Mode Toggle Listeners: العرض الكامل vs عرض البطاقات
+      document.getElementById('viewCompactBtn').addEventListener('click', () => setViewMode('compact'));
+      document.getElementById('viewCardsBtn').addEventListener('click', () => setViewMode('cards'));
+
+      // Compact Sub-Density Toggle Listeners (Full View)
+      const compactGridBtn = document.getElementById('compactGridBtn');
+      const compactRowsBtn = document.getElementById('compactRowsBtn');
+      if (compactGridBtn) compactGridBtn.addEventListener('click', () => setCompactSubMode('grid'));
+      if (compactRowsBtn) compactRowsBtn.addEventListener('click', () => setCompactSubMode('rows'));
+
+      // Login Form Submit Listener
+      const loginForm = document.getElementById('loginForm');
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const usernameInput = document.getElementById('loginUsername').value;
+        const passwordInput = document.getElementById('loginPassword').value;
+        handleLogin(usernameInput, passwordInput);
+      });
+
+      // Toggle Password Visibility on Login Form
+      const togglePassBtn = document.getElementById('togglePasswordVisibilityBtn');
+      const passInput = document.getElementById('loginPassword');
+      togglePassBtn.addEventListener('click', () => {
+        if (passInput.type === 'password') {
+          passInput.type = 'text';
+          togglePassBtn.textContent = 'إخفاء';
+        } else {
+          passInput.type = 'password';
+          togglePassBtn.textContent = 'إظهار';
+        }
+      });
+
+      // Logout button
+      document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+      // Open Users Management Modal (Admin only)
+      const usersModal = document.getElementById('usersModal');
+      document.getElementById('openUsersModalBtn').addEventListener('click', () => {
+        renderUsersList();
+        usersModal.classList.remove('hidden');
+      });
+      document.getElementById('closeUsersModalBtn').addEventListener('click', closeUsersModal);
+
+      // Add User Form Submission
+      const addUserForm = document.getElementById('addUserForm');
+      addUserForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const uName = document.getElementById('newUsername').value;
+        const uPass = document.getElementById('newPassword').value;
+        const uDisp = document.getElementById('newDisplayName').value;
+        const uRole = document.getElementById('newRole').value;
+
+        await addNewUser(uName, uPass, uDisp, uRole);
+        addUserForm.reset();
+      });
+
+      // Delegate Click on Delete User inside Users Modal
+      const usersListContainer = document.getElementById('usersListContainer');
+      usersListContainer.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-delete-user-id]');
+        if (btn) {
+          const uId = btn.getAttribute('data-delete-user-id');
+          const uName = btn.getAttribute('data-user-name');
+          deleteUser(uId, uName);
+        }
+      });
+
+      // Delegate Click Events on Card & Row Actions (Copy, Edit, Delete, Pin)
       const projectsGrid = document.getElementById('projectsGrid');
       projectsGrid.addEventListener('click', (e) => {
         const copyTrigger = e.target.closest('[data-copy-code]');
@@ -1182,7 +1931,7 @@
         }
       });
 
-      // Search Input Instant Listener
+      // Search Input Instant Listener (Works simultaneously for both views)
       const searchInput = document.getElementById('searchInput');
       const clearSearchBtn = document.getElementById('clearSearchBtn');
 
@@ -1216,15 +1965,15 @@
 
       filterAllBtn.addEventListener('click', () => {
         activeFilter = 'all';
-        filterAllBtn.className = 'filter-tab px-3 py-1.5 rounded-lg font-semibold bg-white text-slate-900 shadow-xs transition-colors';
-        filterPinnedBtn.className = 'filter-tab px-3 py-1.5 rounded-lg font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1';
+        filterAllBtn.className = 'filter-tab px-2.5 py-1 rounded-lg font-semibold bg-white text-slate-900 shadow-xs transition-colors';
+        filterPinnedBtn.className = 'filter-tab px-2.5 py-1 rounded-lg font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1';
         renderProjects();
       });
 
       filterPinnedBtn.addEventListener('click', () => {
         activeFilter = 'pinned';
-        filterPinnedBtn.className = 'filter-tab px-3 py-1.5 rounded-lg font-semibold bg-white text-slate-900 shadow-xs transition-colors flex items-center gap-1';
-        filterAllBtn.className = 'filter-tab px-3 py-1.5 rounded-lg font-semibold text-slate-600 hover:text-slate-900 transition-colors';
+        filterPinnedBtn.className = 'filter-tab px-2.5 py-1 rounded-lg font-semibold bg-white text-slate-900 shadow-xs transition-colors flex items-center gap-1';
+        filterAllBtn.className = 'filter-tab px-2.5 py-1 rounded-lg font-semibold text-slate-600 hover:text-slate-900 transition-colors';
         renderProjects();
       });
 
@@ -1262,40 +2011,18 @@
       document.getElementById('closeModalBtn').addEventListener('click', closeProjectModal);
       document.getElementById('cancelModalBtn').addEventListener('click', closeProjectModal);
 
-      // Backup modal
-      document.getElementById('backupModalBtn').addEventListener('click', () => {
-        document.getElementById('backupModal').classList.remove('hidden');
-      });
-      document.getElementById('closeBackupModalBtn').addEventListener('click', closeBackupModal);
-      document.getElementById('exportBtn').addEventListener('click', exportData);
-
-      // Import file trigger
-      const importFileInput = document.getElementById('importFileInput');
-      document.getElementById('importBtn').addEventListener('click', () => {
-        importFileInput.value = '';
-        importFileInput.click();
-      });
-      importFileInput.addEventListener('change', (e) => {
-        if (e.target.files && e.target.files[0]) {
-          handleImportFile(e.target.files[0]);
-        }
-      });
-
-      document.getElementById('resetDefaultsBtn').addEventListener('click', resetDefaults);
-
       // Close modal on outside backdrop click
       window.addEventListener('click', (e) => {
         const projectModal = document.getElementById('projectModal');
-        const backupModal = document.getElementById('backupModal');
         if (e.target === projectModal) closeProjectModal();
-        if (e.target === backupModal) closeBackupModal();
+        if (e.target === usersModal) closeUsersModal();
       });
 
       // Keyboard shortcuts
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           closeProjectModal();
-          closeBackupModal();
+          closeUsersModal();
         }
         if (e.key === '/' && document.activeElement !== searchInput && document.activeElement.tagName !== 'INPUT') {
           e.preventDefault();

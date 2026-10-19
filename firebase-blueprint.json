@@ -32,15 +32,51 @@
         "createdAt": {
           "type": "number",
           "description": "Creation timestamp in milliseconds"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "UID or email of creator",
+          "maxLength": 128
         }
       },
       "required": ["code", "nameAr"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile with role permission",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "User email address",
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "description": "User display name",
+          "maxLength": 128
+        },
+        "role": {
+          "type": "string",
+          "description": "Role: admin or viewer",
+          "enum": ["admin", "viewer"]
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Account creation timestamp"
+        }
+      },
+      "required": ["email", "role"]
     }
   },
   "firestore": {
     "/projects/{projectId}": {
       "schema": "Project",
       "description": "Shared project codes for attendance"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User role management"
     }
   }
 }
